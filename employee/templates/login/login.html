@@ -17,9 +17,14 @@
   </head>
   <body>
     <div class="wrapper fadeInDown">
+        {%if messages%}
+        {%for message in messages%}
+            {{message}}
+        {%endfor%}
+        {%endif%}
       <div id="formContent">
         <!-- Tabs Titles -->
-
+        
         <!-- Icon -->
         <div class="fadeIn first">
           <img
@@ -32,22 +37,24 @@
         </div>
 
         <!-- Login Form -->
-        <form>
+        <form action='' method='post'>
+            {% csrf_token %}
           <input
-            type="text"
+            type="email"
             id="login"
             class="fadeIn second"
-            name="login"
-            placeholder="login"
+            name="email"
+            placeholder="Email"
+            required
           />
           <input
-            type="text"
+            type="password"
             id="password"
             class="fadeIn third"
-            name="login"
-            placeholder="password"
+            name="password"
+            placeholder="Password"
           />
-          <input type="submit" class="fadeIn fourth" value="Log In" />
+          <input type="submit" id='submit' class="fadeIn fourth" value="Log In" />
         </form>
 
         <!-- Remind Passowrd -->
@@ -58,6 +65,9 @@
         </div>
        
     </div>
+    <script>
+     
+    </script>
   </body>
 </html>
 
