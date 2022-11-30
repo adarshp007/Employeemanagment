@@ -31,7 +31,6 @@ def register_view(request):
 @login_required(login_url='/login/')
 def employee_view(request):
     
-    # if request.meth
     if request.method=="POST":
         user=User.objects.get(id=request.POST['usrid'])
         user.first_name=request.POST['fname']
@@ -42,8 +41,6 @@ def employee_view(request):
         user.salary=request.POST['salary']
         user.save()
     queryset=User.objects.filter(user_type=0).order_by('first_name')
-        
-        # serializer=self.get_serializer()
     serializer=UserSerializers(queryset,many=True)
     context=serializer.data
     return render(request,'employees/employees.html',{"employees":context})
@@ -54,8 +51,6 @@ def salary_view(request):
     empid=request.session['empid']
     user=User.objects.get(id=empid)
     serializer=UserSerializers(user)
-    print("seralii",serializer)
-    # import pdb;pdb.set_trace();
     context=serializer.data
     if request.method=="POST":
         print(request.POST["salary"])
@@ -71,7 +66,7 @@ def salary_view(request):
 # Create your views here.
 
 @login_required(login_url='/login/')
-def home_view(request):
+def index(request):
     if request.method== "POST":
         print(request.POST['first_name'])
         firstname=request.POST['first_name']
@@ -86,15 +81,14 @@ def home_view(request):
 
         if useremailcount >0:
             messages.success(request,f"Employee {email} already exist")
-            return redirect('home')
+            return redirect('index')
         try:
 
             user=User.objects.create(first_name=firstname,last_name=lastname,email=email,username=email,mobile=phone,employee_code=employeecode,date_of_birth=dateofbirth)
         except Exception as e:
             messages.success(request,e)
-            return redirect('home')
+            return redirect('index')
 
-        # return render(request,'salary/salary.html')
         request.session['empid']=request.session.get('empid',user.id)
         
         return redirect('salary')
@@ -111,7 +105,7 @@ def login_view(request):
         print(user)
         if user is not None:
             auth_login(request,user)
-            return redirect('home')
+            return redirect('index')
         else:
             messages.success(request,"Incorrect email or password please try again")
             return redirect('login')

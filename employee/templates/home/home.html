@@ -31,7 +31,7 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand text-white" href={% url 'home'%}>Beinex</a>
+        <a class="navbar-brand text-white" href={% url 'index'%}>Beinex</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -44,7 +44,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
             
             <li class="nav-item">
               <a class="nav-link text-white" href={% url 'employees'%}>Employees</a>
@@ -56,40 +56,41 @@
         </div>
       </div>
     </nav>
-    <div class"container-fluid">
-        
+    <div class"container-fluid " style="width:100%;" >
+ <div class="d-flex " style="width:60%;margin:auto;padding:10%;">       
 <form action="" method="post">
     {% csrf_token %}
-    <div class="input-group">
+    <div class="input-group pt-2 pb-1">
         <span class="input-group-text">First and last name</span>
         <input type="text" aria-label="First name" placeholder="First name" name="first_name" required class="form-control">
         <input type="text" aria-label="Last name" placeholder="Last name" name="last_name" required class="form-control">
     </div>
 
-    <div class="input-group">
+    <div class="input-group pt-2">
         <span class="input-group-text">Employee code </span>
         <input type="text" aria-label="Employee code" placeholder="Employee Code" required name="employee_code" class="form-control">
     </div>
-    <div class="input-group">
+    <div class="input-group pt-2">
         <span class="input-group-text">Email</span>
         <input type="email" aria-label="Email" placeholder="Email" name="email" required class="form-control">
     </div>
 
-    <div class="input-group">
+    <div class="input-group pt-2">
         <span class="input-group-text">Phone</span>
         <input type="phone" aria-label="Phone" placeholder="Phone Number" name="phone" required class="form-control">
     </div>
     
-    <div class="input-group">
+    <div class="input-group pt-2">
         <span class="input-group-text">Date of birth</span>
         <input type="date" aria-label="Date of Birth" name="dob" required class="form-control">
     </div>
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary btn-lg">Add Employee</button>
+    <div class="text-center p-2">
+        <button type="submit" class="btn btn-secondary btn-lg">Add Employee</button>
     </div>
     
     
 </form>
+<div>
     <div class="text-center">
 
     {%if messages%}
