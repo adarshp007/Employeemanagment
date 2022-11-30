@@ -163,7 +163,7 @@
         success: function( data ) 
         {
           $('#myModal').modal('toggle');
-            console.log("data",data.id);
+            
             $("#fname").val(data.first_name);
             $("#lname").val(data.last_name);
 
@@ -182,7 +182,7 @@
     })
 
     $('.deletebtn').click(function() { 
-        console.log("uhuhuh")
+        
         var empid=$(this).attr('employee');
         $.ajax(
     {

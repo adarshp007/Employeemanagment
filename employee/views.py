@@ -118,8 +118,7 @@ def logout_view(request):
     return redirect('login')
 
 
-def employees_details_view(request):
-    return redirect('login')
+
 
 class Employees(generics.CreateAPIView):   
     serializer_class = UserSerializers
