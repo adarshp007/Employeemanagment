@@ -35,7 +35,7 @@ def employee_view(request):
         user=User.objects.get(id=request.POST['usrid'])
         user.first_name=request.POST['fname']
         user.last_name=request.POST['lname']
-        user.email=request.POST['email']
+        # user.email=request.POST['email']
         user.mobile=request.POST['phone']
         user.date_of_birth=request.POST['dob']
         user.salary=request.POST['salary']
