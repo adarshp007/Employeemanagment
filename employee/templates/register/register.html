@@ -36,7 +36,7 @@
           />
         </div>
 
-        <!-- Login Form -->
+        <!-- Register Form -->
         <form action='' method='post'>
             {% csrf_token %}
           <input
@@ -49,10 +49,18 @@
           />
           <input
             type="password"
-            id="password"
+            id="pass"
             class="fadeIn third"
             name="password"
             placeholder="Password"
+          />
+
+          <input
+            type="password"
+            id="pass2"
+            class="fadeIn third"
+            name="password2"
+            placeholder="Confirm Password"
           />
           <input type="submit" id='submit' class="fadeIn fourth" value="Log In" />
         </form>
@@ -61,12 +69,21 @@
         <div id="formFooter">
           
           
-          <a class="underlineHover" href={% url 'register' %}>Register</a>
+          <a class="underlineHover" href={% url 'login' %}>Login</a>
         </div>
        
     </div>
     <script>
-     
+     $(document).ready(function(){
+    $('#pass2').focusout(function(){
+        var pass = $('#pass').val();
+        var pass2 = $('#pass2').val();
+        if(pass != pass2){
+            alert('the passwords didn\'t match!');
+        }
+
+    });
+});
     </script>
   </body>
 </html>

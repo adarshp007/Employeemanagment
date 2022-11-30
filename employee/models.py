@@ -18,10 +18,11 @@ class User(AbstractUser, TimestampedModel):
     mobile = PhoneNumberField(null=False,
                               blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    department = models.CharField(max_length=100)
+    department = models.CharField(max_length=100,null=True, blank=True)
     user_type= models.PositiveSmallIntegerField(
         default=EMP, choices=USER_TYPE_CHOICES)
     salary = models.IntegerField(default=0)
+    employee_code=models.CharField(max_length=50,null=True,blank=True,unique=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
