@@ -11,6 +11,8 @@ from employee.models import User
 from employee.serializers import (UserSerializers)
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
 def register_view(request):
     if request.method=='POST':
         email=request.POST['email']
@@ -25,6 +27,8 @@ def register_view(request):
         user.save()
         return redirect('login')
     return render(request,'register/register.html')
+
+@login_required(login_url='/login/')
 def employee_view(request):
     
     # if request.meth
@@ -43,6 +47,8 @@ def employee_view(request):
     serializer=UserSerializers(queryset,many=True)
     context=serializer.data
     return render(request,'employees/employees.html',{"employees":context})
+
+@login_required(login_url='/login/')
 def salary_view(request):
 
     empid=request.session['empid']
@@ -53,11 +59,18 @@ def salary_view(request):
     context=serializer.data
     if request.method=="POST":
         print(request.POST["salary"])
-        user.salary=request.POST["salary"]
-        user.save()
+        try:
+            user.salary=request.POST["salary"]
+            user.save()
+        except Exception as e:
+            messages.success(request,e)
+
+            return redirect("salary")
         return redirect('employees')
     return render(request,'salary/salary.html',context)
 # Create your views here.
+
+@login_required(login_url='/login/')
 def home_view(request):
     if request.method== "POST":
         print(request.POST['first_name'])
@@ -68,10 +81,22 @@ def home_view(request):
         dateofbirth=request.POST['dob']
         phone=request.POST['phone']
         # import pdb;pdb.set_trace();
-        user=User.objects.create(first_name=firstname,last_name=lastname,email=email,username=email,mobile=phone,employee_code=employeecode,date_of_birth=dateofbirth)
+        
+        useremailcount=User.objects.filter(email=email).count()
+
+        if useremailcount >0:
+            messages.success(request,f"Employee {email} already exist")
+            return redirect('home')
+        try:
+
+            user=User.objects.create(first_name=firstname,last_name=lastname,email=email,username=email,mobile=phone,employee_code=employeecode,date_of_birth=dateofbirth)
+        except Exception as e:
+            messages.success(request,e)
+            return redirect('home')
+
         # return render(request,'salary/salary.html')
         request.session['empid']=request.session.get('empid',user.id)
-        print("ppppp",request.session['empid'])
+        
         return redirect('salary')
     return render(request,'home/home.html')
 
@@ -105,14 +130,13 @@ def employees_details_view(request):
 class Employees(generics.CreateAPIView):   
     serializer_class = UserSerializers
     http_method_names = ['get']
-    # queryset=User.objects.all()
+    
 
     def get(self,request,*args,**kwargs):
         queryset=User.objects.filter(user_type=0)
         
-        # serializer=self.get_serializer()
         serializer=UserSerializers(queryset,many=True)
-        # import pdb;pdb.set_trace();
+        
         return Response(serializer.data,status.HTTP_200_OK)     
 
 
@@ -122,13 +146,16 @@ class UserDetails(generics.CreateAPIView):
     queryset=User.objects.all()
 
     def get(self,*args,**kwargs):
-        # import pdb;pdb.set_trace();
+        
 
         queryset=User.objects.get(id=self.kwargs['userid'])
         serializer=UserSerializers(queryset)
         return Response(serializer.data,status.HTTP_200_OK)
-
     
+    
+    
+
+@login_required(login_url='/login/')  
 @csrf_exempt
 def user_update_view(request):
     if request.method=="POST":
@@ -136,5 +163,28 @@ def user_update_view(request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         return redirect('employees')
-    
+
+
+def user_delete_view(request):
+    if request.method=="POST":
+        # import pdb;pdb.set_trace;
+
+        print("shjshjsh")
+        return HttpResponse("post req success")
+
+class UserUpdate(generics.CreateAPIView):
+    serializer_class = UserSerializers
+    http_method_names = ['get']
+    queryset=User.objects.all()
+
+    def get(self,*args,**kwargs):
+        # import pdb;pdb.set_trace();
+
+        queryset1=User.objects.filter(id=self.kwargs['userid']).delete()
+        queryset=User.objects.all()
+        
+        serializer=UserSerializers(queryset,many=True)
+        return Response(serializer.data,status.HTTP_200_OK)
+
+
  

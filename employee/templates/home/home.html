@@ -90,7 +90,14 @@
     
     
 </form>
+    <div class="text-center">
 
+    {%if messages%}
+        {%for message in messages%}
+           <span style="color:red;"> {{message}}</span>
+        {%endfor%}
+        {%endif%}
+    </div>
 
     
 

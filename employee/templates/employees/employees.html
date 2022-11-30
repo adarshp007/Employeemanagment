@@ -81,8 +81,8 @@
       <td>{{i.email}}</td>
       <td>{{i.salary}}</td>
 
-      <td><button class="btn editbtn" id="editbtn" onclick="getColor(this);" employee={{i.id}}><img src="https://www.pngfind.com/pngs/m/275-2755033_edit-png-file-on-phone-svg-edit-icon.png" alt="edit" style="width:25px;"/></button></td>
-      <td><button class="btn btn-none"><img src='https://cdn.iconscout.com/icon/premium/png-256-thumb/delete-1432400-1211078.png' alt='delete' style="width:25px;"/> </button></td>
+      <td><button class="btn editbtn" id="editbtn"   employee={{i.id}}><img src="https://www.pngfind.com/pngs/m/275-2755033_edit-png-file-on-phone-svg-edit-icon.png" alt="edit" style="width:25px;"/></button></td>
+      <td><button class="btn btn-none deletebtn"  employee={{i.id}}><img src='https://cdn.iconscout.com/icon/premium/png-256-thumb/delete-1432400-1211078.png' alt='delete' style="width:25px;"/> </button></td>
 
     </tr>
     {% endfor %}
@@ -112,14 +112,14 @@
             <input type="date" id="dob" name="dob" placeholder="Date of birth" class="" style="width:81%;"/>
           </div>
           <div class="display-flex">
-            <input type="email" id="email" name="email" class="" placeholder="Email" style="width:81%;"/>
+            <input type="email" id="email" name="email" class="" placeholder="Email" style="width:81%;" disabled/>
           </div>
           
           <div class="display-flex">
             <input type="text" id="phone" name="phone" placeholder="Phone" class="" style="width:81%;"/>
           </div>
           <div class="display-flex">
-            <input type="text" id="salary" name="salary" placeholder="Salary" class="" style="width:81%;"/>
+            <input type="number" id="salary" name="salary" placeholder="Salary" class="" style="width:81%;"/>
           </div>
           <div class="display-flex">
             <input type="text" id="usrid" name="usrid" class="invisible"  style="width:81%;" />
@@ -151,7 +151,8 @@
       
 
        $('.editbtn').click(function() { 
-        var empid=$(this).attr('employee')
+        console.log("uhuhuh")
+        var empid=$(this).attr('employee');
         $.ajax(
     {
         type:"GET",
@@ -174,12 +175,33 @@
 
 
         }
-     })
-
-    });  
+     });
     
+    })
 
-      });
+    $('.deletebtn').click(function() { 
+        console.log("uhuhuh")
+        var empid=$(this).attr('employee');
+        $.ajax(
+    {
+        type:"GET",
+        url: "/user/update/"+empid,
+        
+        success: function( data ) 
+        {
+          
+            window.location.assign('/employees');
+            
+        }
+     });
+
+
+
+       })
+
+
+  });  
+   
 </script>
 </body>
 </html>

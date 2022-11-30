@@ -10,7 +10,9 @@ urlpatterns = [
     path('add_salary/',views.salary_view,name="salary"),
     path('register/',views.register_view,name='register'),
     path('user/details/<int:userid>',views.UserDetails.as_view(),name="userdetails"),
-    path('user/update/',views.user_update_view,name="userupdate")
-    
+    path('user/update/<int:userid>',views.UserUpdate.as_view(),name="userupdate"),
+
+    path('user/update/',views.user_update_view,name="userupdate"),  
+    path('userdel/',views.user_delete_view,name="deleteuser"),
 
 ]
