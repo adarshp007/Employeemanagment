@@ -12,6 +12,9 @@ from employee.serializers import (UserSerializers)
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.views.generic import ListView
+from rest_framework import status
 
 def register_view(request):
     if request.method=='POST':
@@ -20,12 +23,16 @@ def register_view(request):
         usercount=User.objects.filter(email=email).count()
         if usercount >0:
             messages.success(request,"User already exist")
-            return redirect('register')
-        user=User.objects.create(email=email,username=email)
-        user.set_password(password)
-        user.user_type=1
-        user.save()
-        return redirect('login')
+            return redirect('register'
+            )
+        try:    
+            user=User.objects.create(email=email,username=email)
+            user.set_password(password)
+            user.user_type=1
+            user.save()
+            return redirect('login')
+        except Exception as e:
+            messages.success(request,e)
     return render(request,'register/register.html')
 
 @login_required(login_url='/login/')
@@ -47,13 +54,13 @@ def employee_view(request):
 
 @login_required(login_url='/login/')
 def salary_view(request):
-
+    # import pdb;pdb.set_trace();
     empid=request.session['empid']
     user=User.objects.get(id=empid)
     serializer=UserSerializers(user)
     context=serializer.data
     if request.method=="POST":
-        print(request.POST["salary"])
+        
         try:
             user.salary=request.POST["salary"]
             user.save()
@@ -68,7 +75,7 @@ def salary_view(request):
 @login_required(login_url='/login/')
 def index(request):
     if request.method== "POST":
-        print(request.POST['first_name'])
+        
         firstname=request.POST['first_name']
         lastname=request.POST['last_name']
         email=request.POST['email']
@@ -78,18 +85,22 @@ def index(request):
         # import pdb;pdb.set_trace();
         
         useremailcount=User.objects.filter(email=email).count()
-
+        
         if useremailcount >0:
             messages.success(request,f"Employee {email} already exist")
             return redirect('index')
         try:
+            # import pdb;pdb.set_trace();
 
             user=User.objects.create(first_name=firstname,last_name=lastname,email=email,username=email,mobile=phone,employee_code=employeecode,date_of_birth=dateofbirth)
+            request.session['empid']=request.session.get('empid',0)
+            del request.session['empid']
+            request.session['empid']=user.id
+            
         except Exception as e:
             messages.success(request,e)
             return redirect('index')
 
-        request.session['empid']=request.session.get('empid',user.id)
         
         return redirect('salary')
     return render(request,'home/home.html')
@@ -165,19 +176,24 @@ def user_delete_view(request):
         print("shjshjsh")
         return HttpResponse("post req success")
 
-class UserUpdate(generics.CreateAPIView):
-    serializer_class = UserSerializers
-    http_method_names = ['get']
-    queryset=User.objects.all()
+# class UserUpdate(generics.CreateAPIView):
+#     serializer_class = UserSerializers
+#     http_method_names = ['get']
+#     queryset=User.objects.all()
 
-    def get(self,*args,**kwargs):
-        # import pdb;pdb.set_trace();
+#     def get(self,*args,**kwargs):
+#         # import pdb;pdb.set_trace();
 
-        queryset1=User.objects.filter(id=self.kwargs['userid']).delete()
-        queryset=User.objects.all()
+#         queryset1=User.objects.filter(id=self.kwargs['userid']).delete()
+#         queryset=User.objects.all()
         
-        serializer=UserSerializers(queryset,many=True)
-        return Response(serializer.data,status.HTTP_200_OK)
+#         serializer=UserSerializers(queryset,many=True)
+#         return Response(serializer.data,status.HTTP_200_OK)
 
 
+class UserUpdate(ListView):
+    
+    def delete(self,*args, **kwargs):
+        User.objects.filter(id=self.kwargs['userid']).delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
  

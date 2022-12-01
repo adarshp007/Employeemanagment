@@ -186,9 +186,9 @@
         var empid=$(this).attr('employee');
         $.ajax(
     {
-        type:"GET",
+        type:"DELETE",
         url: "/user/update/"+empid,
-        
+    
         success: function( data ) 
         {
           
